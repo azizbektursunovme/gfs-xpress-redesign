@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://gfs-xpress.com/sitemap.xml

@@ -1,0 +1,63 @@
+---
+import Base from '../layouts/Base.astro';
+import Photo from '../components/Photo.astro';
+import { company, services, steps } from '../data/site';
+import { url } from '../lib/url';
+
+// "Request this service" preselects the matching equipment on the quote form.
+const cta: Record<string, [string, string]> = {
+  'dry-van': ['Dry van', 'Quote a dry van load'],
+  ltl: ['LTL (1–6 pallets)', 'Quote an LTL shipment'],
+  flatbed: ['Flatbed or step deck', 'Quote a flatbed load'],
+  refrigerated: ['Refrigerated (reefer)', 'Quote a reefer load'],
+  expedited: ['Expedited', 'Quote an expedited load'],
+  dedicated: ['Dedicated lane', 'Ask about dedicated capacity'],
+};
+---
+<Base
+  title="Freight services: dry van, reefer, flatbed, LTL | GFS Express"
+  description="Full truckload dry van, refrigerated, flatbed and step deck, LTL, expedited and dedicated capacity across the 48 states, booked by one GFS Express account team."
+  current="services"
+>
+  <section class="page-hero">
+    <Photo name="band-services" widths={[800, 1440]} sizes="100vw" width={1440} height={810} alt="" eager />
+    <div class="wrap page-hero__inner">
+      <h1>Freight services</h1>
+      <p class="lede">Six ways to move freight, one team to call. Tell us the lane and the load, and we book the right truck.</p>
+      <div class="btn-row">
+        <a class="btn btn--primary" href={url('quote/')}>Get a quote</a>
+        <a class="btn btn--light" href={company.phoneHref}>Call {company.phone}</a>
+      </div>
+    </div>
+  </section>
+
+  {services.map((s, i) => (
+    <section class={i % 2 ? 'section section--soft' : 'section'} id={s.id} aria-labelledby={`${s.id}-title`}>
+      <div class={i % 2 ? 'wrap split split--reverse' : 'wrap split'}>
+        <div class="split__copy">
+          <h2 id={`${s.id}-title`}>{s.title}</h2>
+          <p>{s.body}</p>
+          <ul class="checks">
+            {s.points.map((p) => <li>{p}</li>)}
+          </ul>
+          <p><a class="btn btn--primary" href={url(`quote/?service=${encodeURIComponent(cta[s.id][0])}`)}>{cta[s.id][1]}</a></p>
+        </div>
+        <Photo class="split__img" name={s.photo} sizes="(min-width: 900px) 560px, 100vw" alt="" />
+      </div>
+    </section>
+  ))}
+
+  <section class="section section--dark" aria-labelledby="process-title">
+    <div class="wrap">
+      <div class="head-split">
+        <h2 id="process-title">From quote to delivery</h2>
+        <p>The same four steps for every load, whatever the equipment.</p>
+      </div>
+      <ol class="process process--4">
+        {steps.map((s) => (
+          <li><h3>{s.title}</h3><p>{s.body}</p></li>
+        ))}
+      </ol>
+    </div>
+  </section>
+</Base>

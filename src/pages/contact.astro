@@ -1,0 +1,34 @@
+---
+import Base from '../layouts/Base.astro';
+import ContactForm from '../components/ContactForm.astro';
+import DispatchCard from '../components/DispatchCard.astro';
+import Photo from '../components/Photo.astro';
+import { company, fullAddress } from '../data/site';
+import { url } from '../lib/url';
+---
+<Base
+  title="Contact GFS Express | Call (636) 202-1111, 24/7"
+  description={`Call ${company.name} 24/7 at ${company.phone}, email ${company.email} or visit ${fullAddress}.`}
+  current="contact"
+>
+  <section class="page-hero">
+    <Photo name="band-i70" widths={[800, 1440]} sizes="100vw" width={1440} height={810} alt="" eager />
+    <div class="wrap page-hero__inner">
+      <h1>Contact us</h1>
+      <p class="lede">Call dispatch any time, or send a message and the right person replies.</p>
+      <div class="btn-row">
+        <a class="btn btn--primary" href={company.phoneHref}>Call {company.phone}</a>
+        <a class="btn btn--light" href={url('quote/')}>Get a quote</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--soft">
+    <div class="wrap form-layout">
+      <ContactForm />
+      <DispatchCard title="Talk to us" text="Dispatch answers 24/7. For a rate, the quote form is the fastest way.">
+        Tracking a load? <a href={url('track/')}>Track shipment</a>.
+      </DispatchCard>
+    </div>
+  </section>
+</Base>

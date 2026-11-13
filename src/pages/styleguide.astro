@@ -1,0 +1,121 @@
+---
+// Design system reference for the team. Not linked from the site and not indexed.
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import Photo from '../components/Photo.astro';
+
+const colors = [
+  { name: 'Navy 900', token: '--dark-900', hex: '#0A1F3D', use: 'Top bar, hero, footer' },
+  { name: 'Navy 800', token: '--dark-800', hex: '#0F2A50', use: 'Coverage band, dispatch card' },
+  { name: 'Ink', token: '--ink', hex: '#0F1B2D', use: 'Headings on light' },
+  { name: 'Text', token: '--text', hex: '#344054', use: 'Body copy' },
+  { name: 'Muted', token: '--muted', hex: '#5B6678', use: 'Secondary text' },
+  { name: 'Signal red', token: '--accent', hex: '#D62D1C', use: 'Logo red, darkened: buttons with white text (4.9:1)' },
+  { name: 'Red 300', token: '--accent-300', hex: '#FF8A7D', use: 'Red on navy (7.2:1), focus ring' },
+  { name: 'Link blue', token: '--link', hex: '#0B4A8B', use: 'Links and icons on white (8.9:1)' },
+  { name: 'Tint', token: '--tint', hex: '#EAF1FB', use: 'Icon circles, info note' },
+  { name: 'Soft', token: '--soft', hex: '#F4F6FA', use: 'Alternate section background' },
+  { name: 'Line', token: '--line', hex: '#E2E8F0', use: 'Borders' },
+];
+const type = [
+  { token: '--fs-2xl', label: 'Hero h1, uppercase 800', size: '36–68px', sample: 'YOUR FREIGHT, MOVED RIGHT', weight: 800, upper: true },
+  { token: '--fs-xl', label: 'Section h2, uppercase 800', size: '28–44px', sample: 'EVERY MODE A SHIPPER NEEDS', weight: 800, upper: true },
+  { token: '--fs-lg', label: 'Card title', size: '24px, 700', sample: 'Get a freight rate', weight: 700, upper: false },
+  { token: '--fs-md', label: 'Lead, h3', size: '20px, 700', sample: 'Refrigerated (reefer)', weight: 700, upper: false },
+  { token: '--fs-base', label: 'Body', size: '17px / 1.6, 400', sample: 'One account team books the truck and sends the paperwork.', weight: 400, upper: false },
+  { token: '--fs-sm', label: 'Small', size: '14px, 400', sample: 'Hint and label text', weight: 400, upper: false },
+];
+const space = [4, 8, 12, 16, 24, 32, 48, 64, 96];
+const icons = ['phone', 'mail', 'shield', 'clock', 'route', 'truck', 'pallet', 'layers', 'snow', 'bolt', 'search', 'key'];
+---
+<Base title="Design system | GFS Express" description="Design tokens and components for the GFS Express website." noindex>
+  <section class="page-hero page-hero--plain">
+    <div class="wrap page-hero__inner">
+      <h1>Design system</h1>
+      <p class="lede">Navy and signal red from the GFS Express logo, full-bleed truck photos, bold uppercase headings in Archivo. Day and night themes. Source: src/styles/global.css.</p>
+    </div>
+  </section>
+
+  <section class="section wrap" aria-labelledby="sg-color">
+    <div class="head-split"><h2 id="sg-color">Color</h2><p>Navy carries the brand, red marks the action. Red buttons use the darkened logo red so white text stays readable.</p></div>
+    <ul class="sg-swatches">
+      {colors.map((c) => (
+        <li><span class="sg-chip" style={`background:var(${c.token})`}></span><strong>{c.name}</strong><span class="muted">{c.hex} <code>{c.token}</code></span><span>{c.use}</span></li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="section section--soft" aria-labelledby="sg-type">
+    <div class="wrap">
+      <div class="head-split"><h2 id="sg-type">Type</h2><p>One family: Archivo (variable 100–900), self-hosted latin subset, 35 KB. Uppercase only for h1 and h2.</p></div>
+      <dl class="sg-type">
+        {type.map((t) => (
+          <div>
+            <dt><strong>{t.label}</strong><span class="muted">{t.size}</span><code>{t.token}</code></dt>
+            <dd style={`font-size:var(${t.token});font-weight:${t.weight};color:var(--ink);line-height:1.1;${t.upper ? 'text-transform:uppercase' : ''}`}>{t.sample}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  </section>
+
+  <section class="section wrap" aria-labelledby="sg-space">
+    <div class="head-split"><h2 id="sg-space">Spacing and layout</h2><p>4px base. Content 1200px, gutter 16–40px. Breakpoints 640, 768, 900, 960 (hero 2 columns), 1024 (full header and top bar), 1100.</p></div>
+    <ul class="sg-space">
+      {space.map((s, i) => (<li><span style={`width:${s}px`}></span><code>--s{i + 1}</code> {s}px</li>))}
+    </ul>
+  </section>
+
+  <section class="section section--soft" aria-labelledby="sg-buttons">
+    <div class="wrap">
+      <div class="head-split"><h2 id="sg-buttons">Buttons and icons</h2><p>48px tall (44px small), radius 6px. The label says what happens.</p></div>
+      <div class="btn-row">
+        <a class="btn btn--primary" href="#sg-buttons">Get a quote</a>
+        <a class="btn btn--outline" href="#sg-buttons">See all services</a>
+        <button class="btn btn--primary" disabled>Sending request…</button>
+      </div>
+      <div class="btn-row" style="margin-top:24px;background:var(--dark-800);padding:24px;border-radius:6px">
+        <a class="btn btn--primary" href="#sg-buttons">Start carrier setup</a>
+        <a class="btn btn--light" href="#sg-buttons">See the load board</a>
+      </div>
+      <ul class="sg-icons">
+        {icons.map((i) => (<li><span class="feature__icon"><Icon name={i} /></span><code>{i}</code></li>))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section wrap" aria-labelledby="sg-cards">
+    <div class="head-split"><h2 id="sg-cards">Cards and states</h2><p>Photo card, stats bar, alerts. Errors explain what to fix.</p></div>
+    <ul class="cards sg-cards">
+      <li class="card"><Photo class="card__img" name="svc-dryvan" alt="" /><div class="card__body"><h3>Full truckload (dry van)</h3><p>A 53' dry van for your full load.</p></div></li>
+      <li class="card"><Photo class="card__img" name="svc-reefer" alt="" /><div class="card__body"><h3>Refrigerated (reefer)</h3><p>Freight that must stay cold or frozen.</p></div></li>
+    </ul>
+    <div class="form" style="max-width:640px;margin-top:32px">
+      <div class="field">
+        <label class="label" for="sg-b">Delivery city or ZIP</label>
+        <input class="input" id="sg-b" aria-invalid="true" aria-describedby="sg-b-err" />
+        <p class="field-error" id="sg-b-err">Enter the delivery city or ZIP code.</p>
+      </div>
+      <p class="alert alert--error"><strong>Your request was not sent.</strong><span>Check your connection and try again, or call dispatch.</span></p>
+      <p class="alert alert--info"><span><strong>Preview mode.</strong> This form is not connected to a server yet.</span></p>
+      <div class="success"><h3>Quote request sent</h3><p>Dispatch will reply by phone or email.</p></div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .sg-swatches { list-style: none; display: grid; gap: 20px; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+  .sg-swatches li { display: grid; gap: 4px; font-size: var(--fs-sm); }
+  .sg-chip { height: 64px; border: 1px solid var(--line); border-radius: 6px; }
+  .sg-type div { display: grid; gap: 8px; padding-block: 16px; border-top: 1px solid var(--line); }
+  .sg-type dt { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: var(--fs-sm); }
+  .sg-type dd { margin: 0; }
+  .sg-space { list-style: none; display: grid; gap: 8px; }
+  .sg-space li { display: flex; align-items: center; gap: 12px; font-size: var(--fs-sm); }
+  .sg-space span { display: inline-block; height: 16px; background: var(--accent); border-radius: 2px; }
+  .sg-cards { max-width: 640px; }
+  @media (min-width: 640px) { .sg-cards { grid-template-columns: 1fr 1fr; } }
+  .sg-icons { list-style: none; display: flex; flex-wrap: wrap; gap: 24px; margin-top: 32px; }
+  .sg-icons li { display: grid; gap: 6px; justify-items: center; font-size: var(--fs-sm); }
+  code { font-size: .875em; background: var(--soft); padding: 1px 5px; border-radius: 3px; }
+</style>

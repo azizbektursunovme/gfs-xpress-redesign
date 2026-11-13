@@ -1,0 +1,80 @@
+---
+import Base from '../layouts/Base.astro';
+import Photo from '../components/Photo.astro';
+import Icon from '../components/Icon.astro';
+import { company, steps, shipperBenefits, shipperFaq, services } from '../data/site';
+import { url } from '../lib/url';
+---
+<Base
+  title="For shippers: a dedicated freight team | GFS Express"
+  description="How GFS Express handles your freight: a dedicated account team, vetted carriers, updates in transit and proof of delivery. Request a quote or call 24/7."
+  current="shippers"
+>
+  <section class="page-hero">
+    <Photo name="band-shippers" widths={[800, 1440]} sizes="100vw" width={1440} height={810} alt="" eager />
+    <div class="wrap page-hero__inner">
+      <h1>A dedicated team for your freight</h1>
+      <p class="lede">Full truckloads or specialized freight: one team books a vetted carrier, keeps you posted and sends the paperwork.</p>
+      <div class="btn-row">
+        <a class="btn btn--primary" href={url('quote/')}>Request a quote</a>
+        <a class="btn btn--light" href={url('track/')}>Track a shipment</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="benefits-title">
+    <div class="wrap">
+      <div class="head-split">
+        <h2 id="benefits-title">What you get</h2>
+        <p>More than a truck: people who know your freight and answer the phone.</p>
+      </div>
+      <ul class="features">
+        {shipperBenefits.map((b) => (
+          <li class="feature">
+            <span class="feature__icon"><Icon name={b.icon} /></span>
+            <h3>{b.title}</h3>
+            <p>{b.body}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--dark" id="how-it-works" aria-labelledby="process-title">
+    <div class="wrap">
+      <div class="head-split">
+        <h2 id="process-title">From quote to delivery in four steps</h2>
+        <p>You focus on your business. We handle the truck, the updates and the documents.</p>
+      </div>
+      <ol class="process process--4">
+        {steps.map((s) => <li><h3>{s.title}</h3><p>{s.body}</p></li>)}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="modes-title">
+    <div class="wrap">
+      <div class="head-split">
+        <h2 id="modes-title">Equipment we book</h2>
+        <p>Pick a service to see what is included.</p>
+      </div>
+      <ul class="chips">
+        {services.map((s) => <li><a href={url(`services/#${s.id}`)}>{s.title}</a></li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--soft" id="faq" aria-labelledby="faq-title">
+    <div class="wrap">
+      <div class="head-split">
+        <h2 id="faq-title">Shipper questions</h2>
+        <p>Something else? Call dispatch at <a href={company.phoneHref}>{company.phone}</a>.</p>
+      </div>
+      <div class="faq">
+        {shipperFaq.map((f) => (
+          <details><summary>{f.q}</summary><p>{f.a}</p></details>
+        ))}
+      </div>
+    </div>
+  </section>
+</Base>

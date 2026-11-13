@@ -1,0 +1,65 @@
+---
+import { company, links, fullAddress, services, social } from '../data/site';
+import { url } from '../lib/url';
+const year = new Date().getFullYear();
+---
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <img src={url('brand/logo-light.svg')} width="1068" height="464" alt="" loading="lazy" style="width:170px;height:auto" />
+        <p>Freight brokerage for shippers and carriers across the 48 states, from our office in {company.city}, {company.stateName}.</p>
+        {(company.dot || company.mc) && (
+          <p>{company.dot && <>USDOT {company.dot}<br /></>}{company.mc && <>MC {company.mc}</>}</p>
+        )}
+        {social.length > 0 && (
+          <ul class="footer-social">
+            {social.map((s) => <li><a href={s.url} rel="noopener" target="_blank">{s.name}</a></li>)}
+          </ul>
+        )}
+      </div>
+
+      <div class="footer-col">
+        <h2>Shippers</h2>
+        <ul>
+          {services.map((s) => <li><a href={url(`services/#${s.id}`)}>{s.title}</a></li>)}
+          <li><a href={url('quote/')}>Request a quote</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h2>Carriers and company</h2>
+        <ul>
+          <li><a href={url('carriers/')}>Haul with us</a></li>
+          <li><a href={url('carriers/#apply')}>Carrier setup</a></li>
+          <li><a href={url('loads/')}>Load board</a></li>
+          <li><a href={url('track/')}>Track shipment</a></li>
+          <li><a href={url('portal/')}>Request login</a></li>
+          <li><a href={url('about/')}>About us</a></li>
+          <li><a href={url('jobs/')}>Careers</a></li>
+          {links.fmcsa && <li><a href={links.fmcsa} rel="noopener" target="_blank">FMCSA record</a></li>}
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h2>Contact</h2>
+        <ul>
+          <li><a href={company.phoneHref}>{company.phone}</a></li>
+          <li><a href={`mailto:${company.email}`}>{company.email}</a></li>
+          <li><a href={links.maps} rel="noopener" target="_blank">{fullAddress}</a></li>
+          <li>Dispatch 24/7</li>
+          <li><a href={url('contact/')}>Contact page</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-legal">
+      <p>© {year} {company.legalName}. All rights reserved.</p>
+      <ul>
+        <li><a href={url('privacy/')}>Privacy Policy</a></li>
+        <li><a href={url('terms/')}>Terms of Service</a></li>
+        <li><a href={url('credits/')}>Photo credits</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>

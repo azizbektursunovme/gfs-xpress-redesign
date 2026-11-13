@@ -1,0 +1,23 @@
+---
+// Side card with the phone, email and office address (quote, contact, tracking and login pages).
+import Icon from './Icon.astro';
+import { company, links, fullAddress } from '../data/site';
+
+interface Props { title: string; text: string; id?: string }
+const { title, text, id = 'dispatch' } = Astro.props;
+---
+<aside class="dispatch-card" id={id} aria-labelledby={`${id}-title`}>
+  <div>
+    <h2 id={`${id}-title`}>{title}</h2>
+    <p>{text}</p>
+  </div>
+  <a class="dispatch-card__phone" href={company.phoneHref}>
+    <span class="dispatch-card__icon"><Icon name="phone" /></span>{company.phone}
+  </a>
+  <ul class="dispatch-list">
+    <li><Icon name="mail" /><div><span>Email</span><a href={`mailto:${company.email}`}>{company.email}</a></div></li>
+    <li><Icon name="pin" /><div><span>Office</span><a href={links.maps} target="_blank" rel="noopener">{fullAddress}</a></div></li>
+    <li><Icon name="clock" /><div><span>Dispatch</span><strong>24/7</strong></div></li>
+  </ul>
+  {Astro.slots.has('default') && <p class="dispatch-card__note"><slot /></p>}
+</aside>

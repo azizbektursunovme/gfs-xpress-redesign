@@ -1,0 +1,69 @@
+---
+// Track shipment. With PUBLIC_TRACK_URL set (the TMS tracking page), the reference number is passed to it
+// as ?ref=<number>. Until then the form says plainly that online tracking is not connected yet and
+// points to dispatch: it never shows a made-up status.
+import Icon from './Icon.astro';
+import { company, links } from '../data/site';
+---
+<div class="track quote-card" data-track-url={links.trackUrl}>
+  <h2 class="sr-only">Find your shipment</h2>
+  {!links.trackUrl && (
+    <p class="form-note">
+      <Icon name="info" />
+      <span><strong>Preview mode.</strong> Online tracking is not connected yet. Dispatch gives the status by phone, 24/7.</span>
+    </p>
+  )}
+  <form class="form" id="track-form" novalidate>
+    <div class="form-grid">
+      <div class="field span-2">
+        <label class="label" for="t-ref">Load, PRO or BOL number</label>
+        <div class="input-wrap"><Icon name="search" /><input class="input" id="t-ref" name="ref" required autocomplete="off" pattern="[A-Za-z0-9 \-]{4,30}" placeholder="104522" aria-describedby="t-ref-err t-ref-hint" /></div>
+        <p class="hint" id="t-ref-hint">You find it on the rate confirmation or the bill of lading.</p>
+        <p class="field-error" id="t-ref-err"></p>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn--primary btn--lg" type="submit">Track shipment</button>
+    </div>
+  </form>
+  <div class="empty-state" id="track-result" tabindex="-1" hidden>
+    <span class="empty-state__icon"><Icon name="phone" /></span>
+    <h3>Call dispatch for the status of <span id="track-ref"></span></h3>
+    <p>Online tracking is being connected. Until then dispatch gives you the location and ETA by phone, any time of day.</p>
+    <div class="btn-row">
+      <a class="btn btn--primary" href={company.phoneHref}>Call {company.phone}</a>
+      <a class="btn btn--outline" href={`mailto:${company.email}?subject=Shipment%20status`}>Email dispatch</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  const root = document.querySelector<HTMLElement>('.track');
+  const form = document.getElementById('track-form') as HTMLFormElement | null;
+  if (root && form) {
+    const input = document.getElementById('t-ref') as HTMLInputElement;
+    const err = document.getElementById('t-ref-err')!;
+    const result = document.getElementById('track-result')!;
+    const refOut = document.getElementById('track-ref')!;
+    const trackUrl = root.dataset.trackUrl || '';
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const ref = input.value.trim();
+      if (!ref || !input.checkValidity()) {
+        input.setAttribute('aria-invalid', 'true');
+        err.textContent = 'Enter the load, PRO or BOL number (letters, digits and dashes).';
+        input.focus();
+        return;
+      }
+      input.removeAttribute('aria-invalid');
+      err.textContent = '';
+      if (trackUrl) {
+        location.href = `${trackUrl}${trackUrl.includes('?') ? '&' : '?'}ref=${encodeURIComponent(ref)}`;
+        return;
+      }
+      refOut.textContent = ref;
+      result.hidden = false;
+      result.focus();
+    });
+  }
+</script>

@@ -1,0 +1,89 @@
+---
+// General contact message. Sends JSON to PUBLIC_CONTACT_ENDPOINT through LeadForm.
+// /contact/?topic=careers&role=<id> preselects a job application (links from /jobs/).
+import LeadForm from './LeadForm.astro';
+import Icon from './Icon.astro';
+import { careers } from '../data/site';
+import { url } from '../lib/url';
+
+const endpoint = import.meta.env.PUBLIC_CONTACT_ENDPOINT ?? '';
+---
+<LeadForm
+  id="contact-form"
+  title="Contact form"
+  endpoint={endpoint}
+  source="website-contact"
+  submitLabel="Send message"
+  sendingLabel="Sending message…"
+  successTitle="Message sent"
+  successText="Thank you. The right person on our team will reply by phone or email."
+>
+  <fieldset class="step" aria-labelledby="m-step-1">
+    <div class="step__head">
+      <span class="step__num" aria-hidden="true">1</span>
+      <div>
+        <h3 class="step__title" id="m-step-1">Your message</h3>
+        <p class="step__hint">Need a rate? The <a href={url('quote/')}>quote form</a> is faster.</p>
+      </div>
+    </div>
+    <div class="form-grid">
+      <div class="field">
+        <label class="label" for="m-topic">Topic</label>
+        <select class="input" id="m-topic" name="topic" required data-msg="Choose a topic." aria-describedby="m-topic-err">
+          <option value="">Choose a topic</option>
+          <option value="shipping">Shipping with us</option>
+          <option value="carrier">Hauling for us (carriers)</option>
+          <option value="shipment">A shipment in transit</option>
+          <option value="billing">Billing</option>
+          <option value="careers">Careers</option>
+          <option value="other">Something else</option>
+        </select>
+        <p class="field-error" id="m-topic-err"></p>
+      </div>
+      <div class="field" id="m-role-field" hidden>
+        <label class="label" for="m-role">Position <span class="opt">(for careers)</span></label>
+        <select class="input" id="m-role" name="position">
+          <option value="">Choose a position</option>
+          {careers.roles.map((r) => <option value={r.id}>{r.title}</option>)}
+          <option value="open">Open application</option>
+        </select>
+      </div>
+      <div class="field">
+        <label class="label" for="m-name">Your name</label>
+        <div class="input-wrap"><Icon name="user" /><input class="input" id="m-name" name="name" autocomplete="name" required data-msg="Enter your name." aria-describedby="m-name-err" /></div>
+        <p class="field-error" id="m-name-err"></p>
+      </div>
+      <div class="field">
+        <label class="label" for="m-email">Email</label>
+        <div class="input-wrap"><Icon name="mail" /><input class="input" id="m-email" name="email" type="email" autocomplete="email" required placeholder="name@company.com" data-msg="Enter an email address like name@company.com." aria-describedby="m-email-err" /></div>
+        <p class="field-error" id="m-email-err"></p>
+      </div>
+      <div class="field">
+        <label class="label" for="m-phone">Phone <span class="opt">(optional)</span></label>
+        <div class="input-wrap"><Icon name="phone" /><input class="input" id="m-phone" name="phone" type="tel" autocomplete="tel" pattern="[0-9()+.\s-]{10,20}" placeholder="(636) 555-0100" data-msg="Enter a phone number with area code, or leave it empty." aria-describedby="m-phone-err" /></div>
+        <p class="field-error" id="m-phone-err"></p>
+      </div>
+      <div class="field span-2">
+        <label class="label" for="m-message">Message</label>
+        <div class="input-wrap input-wrap--top"><Icon name="note" /><textarea class="input" id="m-message" name="message" rows="4" required data-msg="Write your message." aria-describedby="m-message-err"></textarea></div>
+        <p class="field-error" id="m-message-err"></p>
+      </div>
+    </div>
+  </fieldset>
+</LeadForm>
+
+<script>
+  const topic = document.getElementById('m-topic') as HTMLSelectElement | null;
+  const roleField = document.getElementById('m-role-field');
+  const role = document.getElementById('m-role') as HTMLSelectElement | null;
+  if (topic && roleField && role) {
+    const sync = () => { roleField.hidden = topic.value !== 'careers'; };
+    const params = new URLSearchParams(location.search);
+    const t = params.get('topic');
+    if (t && Array.from(topic.options).some((o) => o.value === t)) topic.value = t;
+    const r = params.get('role');
+    if (r && Array.from(role.options).some((o) => o.value === r)) role.value = r;
+    sync();
+    topic.addEventListener('change', sync);
+  }
+</script>

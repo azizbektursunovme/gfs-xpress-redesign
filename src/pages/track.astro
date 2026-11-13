@@ -1,0 +1,29 @@
+---
+import Base from '../layouts/Base.astro';
+import TrackForm from '../components/TrackForm.astro';
+import DispatchCard from '../components/DispatchCard.astro';
+import Photo from '../components/Photo.astro';
+import { url } from '../lib/url';
+---
+<Base
+  title="Track a shipment | GFS Express"
+  description="Track a GFS Express shipment with your load, PRO or BOL number, or call dispatch 24/7 for the location and ETA."
+  current="track"
+>
+  <section class="page-hero">
+    <Photo name="band-road" widths={[800, 1440]} sizes="100vw" width={1440} height={810} alt="" eager />
+    <div class="wrap page-hero__inner">
+      <h1>Track a shipment</h1>
+      <p class="lede">Enter the load, PRO or BOL number from your rate confirmation or bill of lading.</p>
+    </div>
+  </section>
+
+  <section class="section section--soft">
+    <div class="wrap form-layout">
+      <TrackForm />
+      <DispatchCard title="Dispatch, 24/7" text="Location, ETA, a change of plans or a problem at the dock: call us with the load number.">
+        Need a portal login? <a href={url('portal/')}>Request login</a>.
+      </DispatchCard>
+    </div>
+  </section>
+</Base>

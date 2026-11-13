@@ -1,0 +1,123 @@
+---
+// Shipper quote request (two steps). Sends JSON to PUBLIC_QUOTE_ENDPOINT through LeadForm.
+// The lane from the home page quick form is prefilled from sessionStorage (never from the URL).
+import LeadForm from './LeadForm.astro';
+import Icon from './Icon.astro';
+import { equipment } from '../data/site';
+
+const endpoint = import.meta.env.PUBLIC_QUOTE_ENDPOINT ?? '';
+---
+<LeadForm
+  id="quote-form"
+  title="Quote request form"
+  endpoint={endpoint}
+  source="website-quote"
+  submitLabel="Request quote"
+  sendingLabel="Sending request…"
+  successTitle="Quote request sent"
+  successText="Thank you. Our team will reply with a rate by phone or email."
+  replyNote="Dispatch replies by phone or email."
+>
+  <fieldset class="step" id="load" aria-labelledby="q-step-1">
+    <div class="step__head">
+      <span class="step__num" aria-hidden="true">1</span>
+      <div>
+        <h3 class="step__title" id="q-step-1">Load details</h3>
+        <p class="step__hint">Where the freight goes and what is in the trailer.</p>
+      </div>
+    </div>
+    <div class="form-grid">
+      <div class="field">
+        <label class="label" for="q-pickup">Pickup city or ZIP</label>
+        <div class="input-wrap"><Icon name="origin" /><input class="input" id="q-pickup" name="pickup" required autocomplete="off" placeholder="St. Louis, MO 63141" data-msg="Enter the pickup city or ZIP code." aria-describedby="q-pickup-err" /></div>
+        <p class="field-error" id="q-pickup-err"></p>
+      </div>
+      <div class="field">
+        <label class="label" for="q-delivery">Delivery city or ZIP</label>
+        <div class="input-wrap"><Icon name="pin" /><input class="input" id="q-delivery" name="delivery" required autocomplete="off" placeholder="Dallas, TX 75201" data-msg="Enter the delivery city or ZIP code." aria-describedby="q-delivery-err" /></div>
+        <p class="field-error" id="q-delivery-err"></p>
+      </div>
+      <div class="field">
+        <label class="label" for="q-date">Pickup date</label>
+        <input class="input" id="q-date" name="pickupDate" type="date" required data-msg="Choose a pickup date from today onward." aria-describedby="q-date-err" />
+        <p class="field-error" id="q-date-err"></p>
+      </div>
+      <div class="field">
+        <label class="label" for="q-equipment">Equipment</label>
+        <select class="input" id="q-equipment" name="equipment" required data-msg='Choose the equipment, or "Not sure".' aria-describedby="q-equipment-err">
+          <option value="">Choose equipment</option>
+          {equipment.map((e) => <option>{e}</option>)}
+        </select>
+        <p class="field-error" id="q-equipment-err"></p>
+      </div>
+      <div class="field">
+        <label class="label" for="q-commodity">What are you shipping? <span class="opt">(optional)</span></label>
+        <div class="input-wrap"><Icon name="box" /><input class="input" id="q-commodity" name="commodity" placeholder="22 pallets of canned food" /></div>
+      </div>
+      <div class="field">
+        <label class="label" for="q-weight">Total weight <span class="opt">(optional)</span></label>
+        <div class="input-wrap input-wrap--suffix"><Icon name="weight" /><input class="input" id="q-weight" name="weightLbs" type="number" inputmode="numeric" min="1" max="80000" placeholder="38000" data-msg="Enter the weight in pounds, up to 80,000." aria-describedby="q-weight-err" /><span class="suffix">lbs</span></div>
+        <p class="field-error" id="q-weight-err"></p>
+      </div>
+    </div>
+  </fieldset>
+
+  <fieldset class="step" aria-labelledby="q-step-2">
+    <div class="step__head">
+      <span class="step__num" aria-hidden="true">2</span>
+      <div>
+        <h3 class="step__title" id="q-step-2">Your contact details</h3>
+        <p class="step__hint">Dispatch sends the rate to this email or phone.</p>
+      </div>
+    </div>
+    <div class="form-grid">
+      <div class="field">
+        <label class="label" for="q-company">Company</label>
+        <div class="input-wrap"><Icon name="building" /><input class="input" id="q-company" name="company" autocomplete="organization" required data-msg="Enter your company name." aria-describedby="q-company-err" /></div>
+        <p class="field-error" id="q-company-err"></p>
+      </div>
+      <div class="field">
+        <label class="label" for="q-name">Your name</label>
+        <div class="input-wrap"><Icon name="user" /><input class="input" id="q-name" name="name" autocomplete="name" required data-msg="Enter your name." aria-describedby="q-name-err" /></div>
+        <p class="field-error" id="q-name-err"></p>
+      </div>
+      <div class="field">
+        <label class="label" for="q-email">Email</label>
+        <div class="input-wrap"><Icon name="mail" /><input class="input" id="q-email" name="email" type="email" autocomplete="email" required placeholder="name@company.com" data-msg="Enter an email address like name@company.com." aria-describedby="q-email-err" /></div>
+        <p class="field-error" id="q-email-err"></p>
+      </div>
+      <div class="field">
+        <label class="label" for="q-phone">Phone <span class="opt">(optional)</span></label>
+        <div class="input-wrap"><Icon name="phone" /><input class="input" id="q-phone" name="phone" type="tel" autocomplete="tel" pattern="[0-9()+.\s-]{10,20}" placeholder="(636) 555-0100" data-msg="Enter a phone number with area code, or leave it empty." aria-describedby="q-phone-err" /></div>
+        <p class="field-error" id="q-phone-err"></p>
+      </div>
+      <div class="field span-2">
+        <label class="label" for="q-notes">Anything else? <span class="opt">(optional)</span></label>
+        <div class="input-wrap input-wrap--top"><Icon name="note" /><textarea class="input" id="q-notes" name="notes" rows="3" placeholder="Dock hours, appointment, hazmat, temperature, recurring lane"></textarea></div>
+      </div>
+    </div>
+  </fieldset>
+</LeadForm>
+
+<script>
+  // Pickup date from today; lane prefilled from the home page quick form.
+  const date = document.getElementById('q-date') as HTMLInputElement | null;
+  if (date) {
+    const now = new Date();
+    date.min = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+    let draft: Record<string, string> = {};
+    try {
+      draft = JSON.parse(sessionStorage.getItem('gxQuoteDraft') || '{}');
+      sessionStorage.removeItem('gxQuoteDraft');
+    } catch { /* storage blocked */ }
+    const params = new URLSearchParams(location.search); // fallback when storage was blocked: lane only
+    const set = (id: string, key: string) => {
+      const el = document.getElementById(id) as HTMLInputElement | HTMLSelectElement | null;
+      const v = draft[key] || params.get(key) || '';
+      if (el && v) el.value = v;
+    };
+    set('q-pickup', 'pickup'); set('q-delivery', 'delivery'); set('q-date', 'pickupDate'); set('q-equipment', 'equipment');
+    const svc = params.get('service');
+    if (svc) set('q-equipment', 'service');
+  }
+</script>

@@ -1,0 +1,86 @@
+---
+// Short quote form in the home hero. It sends nothing itself and asks for no personal data:
+// it validates the lane, keeps the answers for this browser tab (sessionStorage) and opens /quote/,
+// where the full form is prefilled. Name, email and phone are never put in the URL.
+import { equipment } from '../data/site';
+import { url } from '../lib/url';
+---
+<div class="qq">
+  <div>
+    <h2 id="qq-title">Get a freight rate</h2>
+    <p>Start with the lane. Next you add the load and your contact details.</p>
+  </div>
+  <form id="qq-form" action={url('quote/')} method="get" novalidate aria-labelledby="qq-title">
+    <div class="field">
+      <label class="label" for="qq-pickup">Pickup city or ZIP</label>
+      <input class="input" id="qq-pickup" name="pickup" required autocomplete="off" aria-describedby="qq-pickup-err" />
+      <p class="field-error" id="qq-pickup-err"></p>
+    </div>
+    <div class="field">
+      <label class="label" for="qq-delivery">Delivery city or ZIP</label>
+      <input class="input" id="qq-delivery" name="delivery" required autocomplete="off" aria-describedby="qq-delivery-err" />
+      <p class="field-error" id="qq-delivery-err"></p>
+    </div>
+    <div class="field">
+      <label class="label" for="qq-date">Pickup date</label>
+      <input class="input" id="qq-date" name="pickupDate" type="date" required aria-describedby="qq-date-err" />
+      <p class="field-error" id="qq-date-err"></p>
+    </div>
+    <div class="field">
+      <label class="label" for="qq-equipment">Equipment</label>
+      <select class="input" id="qq-equipment" name="equipment" required aria-describedby="qq-equipment-err">
+        <option value="">Choose</option>
+        {equipment.map((e) => <option>{e}</option>)}
+      </select>
+      <p class="field-error" id="qq-equipment-err"></p>
+    </div>
+    <button class="btn btn--primary btn--block" type="submit">Continue to quote</button>
+  </form>
+</div>
+
+<script>
+  const form = document.getElementById('qq-form') as HTMLFormElement | null;
+  if (form) {
+    const fields: [string, string][] = [
+      ['qq-pickup', 'Enter the pickup city or ZIP code.'],
+      ['qq-delivery', 'Enter the delivery city or ZIP code.'],
+      ['qq-date', 'Choose a pickup date from today onward.'],
+      ['qq-equipment', 'Choose the equipment, or "Not sure".'],
+    ];
+    const date = document.getElementById('qq-date') as HTMLInputElement;
+    const now = new Date();
+    date.min = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+
+    const check = (id: string, msg: string) => {
+      const el = document.getElementById(id) as HTMLInputElement;
+      const err = document.getElementById(`${id}-err`)!;
+      const ok = el.value.trim() !== '' && el.checkValidity();
+      if (ok) el.removeAttribute('aria-invalid');
+      else el.setAttribute('aria-invalid', 'true');
+      err.textContent = ok ? '' : msg;
+      return ok ? null : el;
+    };
+
+    form.addEventListener('input', (e) => {
+      const el = e.target as HTMLInputElement;
+      if (el.getAttribute('aria-invalid') === 'true') {
+        const f = fields.find(([id]) => id === el.id);
+        if (f) check(...f);
+      }
+    });
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const firstBad = fields.map((f) => check(...f)).find(Boolean);
+      if (firstBad) { firstBad.focus(); return; }
+      const value = (id: string) => (document.getElementById(id) as HTMLInputElement).value.trim();
+      const draft = { pickup: value('qq-pickup'), delivery: value('qq-delivery'), pickupDate: value('qq-date'), equipment: value('qq-equipment') };
+      try {
+        sessionStorage.setItem('gxQuoteDraft', JSON.stringify(draft));
+        location.href = `${form.action.split('?')[0]}#load`;
+      } catch {
+        form.submit(); // storage blocked: the lane and date go in the URL (no personal data in this form)
+      }
+    });
+  }
+</script>

@@ -1,0 +1,64 @@
+---
+import Base from '../layouts/Base.astro';
+import Photo from '../components/Photo.astro';
+import Icon from '../components/Icon.astro';
+import { company, careers } from '../data/site';
+import { url } from '../lib/url';
+---
+<Base
+  title="Careers in freight brokerage | GFS Express"
+  description={`Open positions at ${company.name} in ${company.city}, ${company.stateName} and remote: freight sales, carrier relations, account management, dispatch, software and data.`}
+  current="jobs"
+>
+  <section class="page-hero">
+    <Photo name="band-night" widths={[800, 1440]} sizes="100vw" width={1440} height={810} alt="" eager />
+    <div class="wrap page-hero__inner">
+      <h1>Work with us. Grow with us.</h1>
+      <p class="lede">Build a career in freight with training, clear growth paths and a team that supports each other.</p>
+      <div class="btn-row"><a class="btn btn--primary" href="#positions">See open positions</a></div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="benefits-title">
+    <div class="wrap">
+      <div class="head-split">
+        <h2 id="benefits-title">Why people choose GFS Express</h2>
+        <p>We invest in people: structured training, a clear path forward and the support to get there.</p>
+      </div>
+      <ul class="features">
+        {careers.benefits.map((b) => (
+          <li class="feature">
+            <span class="feature__icon"><Icon name={b.icon} /></span>
+            <h3>{b.title}</h3>
+            <p>{b.body}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--soft" id="positions" aria-labelledby="positions-title">
+    <div class="wrap">
+      <div class="head-split">
+        <h2 id="positions-title">Open positions</h2>
+        <p>Apply with a short message. Our team replies by email.</p>
+      </div>
+      <ul class="roles">
+        {careers.roles.map((r) => (
+          <li class="role">
+            <span class="role__type">{r.team}</span>
+            <h3>{r.title}</h3>
+            <p class="role__meta">{r.type} · {r.location}</p>
+            <p>{r.body}</p>
+            <a class="link-more" href={url(`contact/?topic=careers&role=${r.id}`)}>Apply<span class="sr-only"> for {r.title}</span></a>
+          </li>
+        ))}
+      </ul>
+      <div class="audience__card" style="margin-top:32px">
+        <h2>Don't see your role?</h2>
+        <p>Send us a short note about yourself. We keep it on file for new openings.</p>
+        <p><a class="btn btn--primary" href={url('contact/?topic=careers&role=open')}>Send an open application</a></p>
+      </div>
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,30 @@
+---
+import Base from '../layouts/Base.astro';
+import QuoteForm from '../components/QuoteForm.astro';
+import DispatchCard from '../components/DispatchCard.astro';
+import Photo from '../components/Photo.astro';
+import { company } from '../data/site';
+import { url } from '../lib/url';
+---
+<Base
+  title="Request a freight quote | GFS Express"
+  description={`Request a rate for dry van, reefer, flatbed, LTL or expedited freight. ${company.name} replies by phone or email; urgent loads: ${company.phone}, 24/7.`}
+  current="quote"
+>
+  <section class="page-hero">
+    <Photo name="band-road" widths={[800, 1440]} sizes="100vw" width={1440} height={810} alt="" eager />
+    <div class="wrap page-hero__inner">
+      <h1>Request a quote</h1>
+      <p class="lede">Tell us the lane, the date and the freight. We reply with a rate, with no obligation.</p>
+    </div>
+  </section>
+
+  <section class="section section--soft">
+    <div class="wrap form-layout">
+      <QuoteForm />
+      <DispatchCard title="Urgent load?" text="Call dispatch for same-day pickups and loads that cannot wait for email.">
+        Hauling for us? <a href={url('carriers/#apply')}>Carrier setup</a> is on the carriers page.
+      </DispatchCard>
+    </div>
+  </section>
+</Base>

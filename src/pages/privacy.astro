@@ -1,0 +1,54 @@
+---
+// DRAFT written for this redesign (the old /privacy page held a law firm's template text).
+// It describes only what this website actually collects. Have it reviewed before publishing.
+import Base from '../layouts/Base.astro';
+import { company, fullAddress } from '../data/site';
+---
+<Base
+  title="Privacy Policy | GFS Express"
+  description={`How ${company.name} collects and uses the information you send through gfs-xpress.com.`}
+  current="legal"
+>
+  <section class="page-hero page-hero--plain">
+    <div class="wrap page-hero__inner">
+      <h1>Privacy Policy</h1>
+      <p class="lede">Last updated: November 2026</p>
+    </div>
+  </section>
+
+  <section class="section wrap legal">
+    <p>This policy explains what information {company.legalName} ("{company.name}", "we") collects through {company.domain} and how we use it.</p>
+
+    <h2>Information you give us</h2>
+    <p>When you use a form on this website we receive what you type into it:</p>
+    <ul>
+      <li>Quote requests: pickup and delivery locations, pickup date, equipment, freight description and weight, company name, your name, email and phone.</li>
+      <li>Carrier setup: company name, MC and USDOT numbers, equipment, number of trucks, preferred lanes and a contact person.</li>
+      <li>Login requests and contact messages: company, name, email, phone and your message.</li>
+    </ul>
+    <p>We do not ask for Social Security numbers, driver's license numbers or payment card details on this website.</p>
+
+    <h2>Information collected automatically</h2>
+    <p>Our web host keeps standard server logs (IP address, browser type, pages requested, date and time) to run and secure the site. The site does not use advertising or analytics cookies. It stores your day or night theme choice in your browser only.</p>
+
+    <h2>How we use your information</h2>
+    <ul>
+      <li>To reply to your request, prepare a rate, set you up as a carrier or give you portal access.</li>
+      <li>To arrange, track and invoice shipments you book with us.</li>
+      <li>To meet legal, insurance and regulatory obligations in transportation.</li>
+    </ul>
+    <p>We do not sell your personal information.</p>
+
+    <h2>Who we share it with</h2>
+    <p>We share the details a shipment needs with the carriers who move it, and we use service providers (for example email and hosting) who process data on our behalf. We may disclose information when the law requires it.</p>
+
+    <h2>How long we keep it</h2>
+    <p>We keep requests and shipment records as long as needed for the purposes above and for the periods required by tax and transportation regulations.</p>
+
+    <h2>Your choices</h2>
+    <p>You can ask us to see, correct or delete the personal information we hold about you by emailing <a href={`mailto:${company.email}`}>{company.email}</a>. We will not send you marketing messages unless you ask for them.</p>
+
+    <h2>Contact</h2>
+    <p>{company.legalName}, {fullAddress}. Phone <a href={company.phoneHref}>{company.phone}</a>, email <a href={`mailto:${company.email}`}>{company.email}</a>.</p>
+  </section>
+</Base>

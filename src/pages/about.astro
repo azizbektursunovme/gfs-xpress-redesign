@@ -1,0 +1,71 @@
+---
+import Base from '../layouts/Base.astro';
+import Photo from '../components/Photo.astro';
+import { company, links, fullAddress, principles, values } from '../data/site';
+import { url } from '../lib/url';
+---
+<Base
+  title="About GFS Express | Freight brokerage in St. Louis, Missouri"
+  description={`${company.name} is a freight brokerage in ${company.city}, ${company.stateName}, connecting shippers with vetted carriers across the 48 states.`}
+  current="about"
+>
+  <section class="page-hero">
+    <Photo name="band-about" widths={[800, 1440]} sizes="100vw" width={1440} height={810} alt="" eager />
+    <div class="wrap page-hero__inner">
+      <h1>Freight brokerage built on accountability</h1>
+      <p class="lede">We connect shippers with vetted carriers across the 48 states, from our office in {company.city}, {company.stateName}.</p>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="principles-title">
+    <div class="wrap">
+      <div class="head-split">
+        <h2 id="principles-title">How we work</h2>
+        <p>Responsive people, clear updates and carriers we have checked ourselves.</p>
+      </div>
+      <ul class="values">
+        {principles.map((v) => <li><h3>{v.title}</h3><p>{v.body}</p></li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--soft" aria-labelledby="values-title">
+    <div class="wrap split">
+      <div class="split__copy">
+        <h2 id="values-title">What we stand for</h2>
+        <ul class="checks">
+          {values.map((v) => <li><strong>{v.title}.</strong> {v.body}</li>)}
+        </ul>
+      </div>
+      <div class="contact-card">
+        <h2>Our office</h2>
+        <dl class="info-list">
+          <div><dt>Address</dt><dd><a href={links.maps} rel="noopener" target="_blank">{fullAddress}</a></dd></div>
+          <div><dt>Phone, 24/7</dt><dd><a href={company.phoneHref}>{company.phone}</a></dd></div>
+          <div><dt>Email</dt><dd><a href={`mailto:${company.email}`}>{company.email}</a></dd></div>
+          {company.dot && <div><dt>USDOT / MC</dt><dd>{company.dot}{company.mc && <> / {company.mc}</>}</dd></div>}
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-label="Next steps">
+    <div class="wrap audience">
+      <div class="audience__card">
+        <span class="audience__kicker">Work with us</span>
+        <h2>Ship or haul with GFS Express</h2>
+        <p>Shippers get a rate and a dedicated team. Carriers get consistent loads and quick pay.</p>
+        <div class="btn-row">
+          <a class="btn btn--primary" href={url('quote/')}>Get a quote</a>
+          <a class="btn btn--outline" href={url('carriers/')}>Haul with us</a>
+        </div>
+      </div>
+      <div class="audience__card">
+        <span class="audience__kicker">Careers</span>
+        <h2>Build a career in freight</h2>
+        <p>Sales, carrier relations, operations and technology roles in {company.city} and remote.</p>
+        <p><a class="btn btn--primary" href={url('jobs/')}>See open positions</a></p>
+      </div>
+    </div>
+  </section>
+</Base>

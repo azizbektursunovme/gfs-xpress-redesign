@@ -1,0 +1,61 @@
+---
+// "Request login": asks for access to the shipper or carrier portal. Sends JSON to PUBLIC_PORTAL_ENDPOINT.
+import LeadForm from './LeadForm.astro';
+import Icon from './Icon.astro';
+
+const endpoint = import.meta.env.PUBLIC_PORTAL_ENDPOINT ?? '';
+---
+<LeadForm
+  id="portal-form"
+  title="Login request form"
+  endpoint={endpoint}
+  source="website-login-request"
+  submitLabel="Request login"
+  sendingLabel="Sending request…"
+  successTitle="Login request sent"
+  successText="Thank you. We check your account and email your login details."
+  replyNote="We reply by email within one business day."
+>
+  <fieldset class="step" aria-labelledby="p-step-1">
+    <div class="step__head">
+      <span class="step__num" aria-hidden="true">1</span>
+      <div>
+        <h3 class="step__title" id="p-step-1">Who needs access</h3>
+        <p class="step__hint">Logins are for shippers and carriers who already work with us.</p>
+      </div>
+    </div>
+    <div class="form-grid">
+      <div class="field span-2" role="radiogroup" aria-labelledby="p-role-label">
+        <span class="label" id="p-role-label">I am a</span>
+        <div class="choice-cards">
+          <label class="choice-card"><input type="radio" name="role" value="shipper" checked /><span><strong>Shipper</strong><span>Track loads, documents and invoices</span></span></label>
+          <label class="choice-card"><input type="radio" name="role" value="carrier" /><span><strong>Carrier</strong><span>Loads, documents and payments</span></span></label>
+        </div>
+      </div>
+      <div class="field">
+        <label class="label" for="p-company">Company</label>
+        <div class="input-wrap"><Icon name="building" /><input class="input" id="p-company" name="company" autocomplete="organization" required data-msg="Enter your company name." aria-describedby="p-company-err" /></div>
+        <p class="field-error" id="p-company-err"></p>
+      </div>
+      <div class="field">
+        <label class="label" for="p-name">Your name</label>
+        <div class="input-wrap"><Icon name="user" /><input class="input" id="p-name" name="name" autocomplete="name" required data-msg="Enter your name." aria-describedby="p-name-err" /></div>
+        <p class="field-error" id="p-name-err"></p>
+      </div>
+      <div class="field">
+        <label class="label" for="p-email">Work email</label>
+        <div class="input-wrap"><Icon name="mail" /><input class="input" id="p-email" name="email" type="email" autocomplete="email" required placeholder="name@company.com" data-msg="Enter an email address like name@company.com." aria-describedby="p-email-err" /></div>
+        <p class="field-error" id="p-email-err"></p>
+      </div>
+      <div class="field">
+        <label class="label" for="p-phone">Phone <span class="opt">(optional)</span></label>
+        <div class="input-wrap"><Icon name="phone" /><input class="input" id="p-phone" name="phone" type="tel" autocomplete="tel" pattern="[0-9()+.\s-]{10,20}" placeholder="(636) 555-0100" data-msg="Enter a phone number with area code, or leave it empty." aria-describedby="p-phone-err" /></div>
+        <p class="field-error" id="p-phone-err"></p>
+      </div>
+      <div class="field span-2">
+        <label class="label" for="p-ref">Load number or MC number <span class="opt">(optional, helps us find your account)</span></label>
+        <input class="input" id="p-ref" name="reference" placeholder="Load 104522 or MC 123456" />
+      </div>
+    </div>
+  </fieldset>
+</LeadForm>

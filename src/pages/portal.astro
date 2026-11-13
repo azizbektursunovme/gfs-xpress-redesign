@@ -1,0 +1,33 @@
+---
+import Base from '../layouts/Base.astro';
+import PortalForm from '../components/PortalForm.astro';
+import DispatchCard from '../components/DispatchCard.astro';
+import Photo from '../components/Photo.astro';
+import { links } from '../data/site';
+import { url } from '../lib/url';
+---
+<Base
+  title="Request a portal login | GFS Express"
+  description="Shippers and carriers who work with GFS Express can request a login to see loads, documents, invoices and payments."
+  current="portal"
+>
+  <section class="page-hero">
+    <Photo name="band-road" widths={[800, 1440]} sizes="100vw" width={1440} height={810} alt="" eager />
+    <div class="wrap page-hero__inner">
+      <h1>Request a login</h1>
+      <p class="lede">For shippers and carriers who already work with us: loads, documents, invoices and payments in one place.</p>
+      {links.portalUrl && (
+        <div class="btn-row"><a class="btn btn--primary" href={links.portalUrl}>Sign in to the portal</a></div>
+      )}
+    </div>
+  </section>
+
+  <section class="section section--soft">
+    <div class="wrap form-layout">
+      <PortalForm />
+      <DispatchCard title="New to GFS Express?" text="Logins come after the first load. Start with a quote or carrier setup.">
+        <a href={url('quote/')}>Get a quote</a> or <a href={url('carriers/#apply')}>start carrier setup</a>.
+      </DispatchCard>
+    </div>
+  </section>
+</Base>

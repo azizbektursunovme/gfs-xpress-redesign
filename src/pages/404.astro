@@ -1,0 +1,20 @@
+---
+import Base from '../layouts/Base.astro';
+import { company } from '../data/site';
+import { url } from '../lib/url';
+---
+<Base title="Page not found | GFS Express" description="This page does not exist." noindex>
+  <section class="page-hero page-hero--plain notfound">
+    <div class="wrap page-hero__inner">
+      <img class="notfound__crest" src={url('brand/logo-light.svg')} width="1068" height="464" alt="" />
+      <p class="notfound__code">Error 404</p>
+      <h1>Wrong exit</h1>
+      <p class="lede">This page has moved or never existed. Pick a route below, or call dispatch at {company.phone}.</p>
+      <div class="btn-row">
+        <a class="btn btn--primary" href={url('/')}>Go to the home page</a>
+        <a class="btn btn--light" href={url('quote/')}>Get a quote</a>
+        <a class="btn btn--light" href={url('track/')}>Track a shipment</a>
+      </div>
+    </div>
+  </section>
+</Base>

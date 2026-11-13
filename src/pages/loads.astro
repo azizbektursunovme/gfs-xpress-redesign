@@ -1,0 +1,63 @@
+---
+import Base from '../layouts/Base.astro';
+import Photo from '../components/Photo.astro';
+import Icon from '../components/Icon.astro';
+import { company, loads, regions } from '../data/site';
+import { url } from '../lib/url';
+
+// Loads come from the TMS once it is connected (src/data/site.ts → loads). Until then the board says so
+// instead of showing placeholder loads ("Load undefined", "Origin TBD").
+const usd = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+---
+<Base
+  title="Load board for carriers | GFS Express"
+  description={`Available loads from ${company.name} for dry van, reefer and flatbed carriers. Call dispatch at ${company.phone} to book.`}
+  current="loads"
+>
+  <section class="page-hero">
+    <Photo name="band-i70" widths={[800, 1440]} sizes="100vw" width={1440} height={810} alt="" eager />
+    <div class="wrap page-hero__inner">
+      <h1>Load board</h1>
+      <p class="lede">Open loads for carriers in our network. Call dispatch with the reference number to book.</p>
+      <div class="btn-row">
+        <a class="btn btn--primary" href={company.phoneHref}>Call dispatch {company.phone}</a>
+        <a class="btn btn--light" href={url('carriers/#apply')}>Not set up yet?</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="loads-title">
+    <div class="wrap">
+      <div class="head-split">
+        <h2 id="loads-title">Open loads</h2>
+        <p>Posted by dispatch. Book by phone with the reference number.</p>
+      </div>
+      {loads.length > 0 ? (
+        <div style="overflow-x:auto">
+          <table class="loads-table">
+            <thead><tr><th scope="col">Ref</th><th scope="col">Equipment</th><th scope="col">Lane</th><th scope="col">Pickup</th><th scope="col">Weight</th><th scope="col">Rate</th></tr></thead>
+            <tbody>
+              {loads.map((l) => (
+                <tr>
+                  <td>{l.ref}</td><td>{l.equipment}</td><td>{l.origin} → {l.destination}</td><td>{l.pickup}</td>
+                  <td>{l.weightLbs ? `${l.weightLbs.toLocaleString('en-US')} lbs` : 'Call'}</td>
+                  <td>{l.rateUsd ? usd.format(l.rateUsd) : 'Call'}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <div class="empty-state">
+          <span class="empty-state__icon"><Icon name="truck" /></span>
+          <h3>No loads are posted online right now</h3>
+          <p>Dispatch has freight every day on our main corridors ({regions.map((r) => r.name).join(', ')}). Call with your truck location, equipment and the lane you want.</p>
+          <div class="btn-row">
+            <a class="btn btn--primary" href={company.phoneHref}>Call {company.phone}</a>
+            <a class="btn btn--outline" href={`mailto:${company.email}?subject=Truck%20available`}>Email your truck</a>
+          </div>
+        </div>
+      )}
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,149 @@
+---
+import Icon from './Icon.astro';
+import { company } from '../data/site';
+import { url } from '../lib/url';
+
+interface Props { current: string }
+const { current } = Astro.props;
+
+// Absolute links (with base) so the menu works on every page, including the legal pages.
+const items = [
+  { href: url('services/'), label: 'Services', key: 'services' },
+  { href: url('shippers/'), label: 'Shippers', key: 'shippers' },
+  { href: url('carriers/'), label: 'Carriers', key: 'carriers' },
+  { href: url('loads/'), label: 'Load board', key: 'loads' },
+  { href: url('about/'), label: 'About', key: 'about' },
+];
+// Utility links: the top bar on desktop, the menu panel on phones.
+const utility = [
+  { href: url('track/'), label: 'Track shipment', key: 'track' },
+  { href: url('portal/'), label: 'Request login', key: 'portal' },
+  { href: url('jobs/'), label: 'Careers', key: 'jobs' },
+  { href: url('contact/'), label: 'Contact', key: 'contact' },
+];
+---
+<div class="topbar">
+  <div class="wrap topbar__inner">
+    <p>
+      Headquarters: <strong>{company.city}, {company.state}</strong>
+      {company.dot && <> <strong>USDOT {company.dot}</strong></>}
+      {company.mc && <> <strong>MC {company.mc}</strong></>}
+    </p>
+    <ul class="topbar__links">
+      {utility.map((i) => (
+        <li><a href={i.href} aria-current={current === i.key ? 'page' : undefined}>{i.label}</a></li>
+      ))}
+    </ul>
+  </div>
+</div>
+
+<header class="site-header">
+  <div class="wrap site-header__bar">
+    <a class="brand" href={url('/')} aria-label={`${company.name} home`}>
+      <img class="logo--on-light" src={url('brand/logo.svg')} width="1068" height="464" alt="" />
+      <img class="logo--on-dark" src={url('brand/logo-light.svg')} width="1068" height="464" alt="" />
+    </a>
+
+    <nav class="nav" aria-label="Main">
+      <ul>
+        {items.map((i) => (
+          <li><a href={i.href} aria-current={current === i.key ? 'page' : undefined}>{i.label}</a></li>
+        ))}
+      </ul>
+    </nav>
+
+    <div class="header-actions">
+      <a class="header-phone" href={company.phoneHref} aria-label={`Call ${company.phone}`}><Icon name="phone" /><span class="header-phone__num">{company.phone}</span></a>
+      <a class="btn btn--primary btn--small" href={url('quote/')}>Get a quote</a>
+    </div>
+
+    <button class="theme-toggle" type="button" aria-label="Switch to night theme" title="Switch to night theme">
+      <Icon name="moon" class="icon icon--moon" />
+      <Icon name="sun" class="icon icon--sun" />
+    </button>
+
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-panel">
+      <span class="nav-toggle__bars" aria-hidden="true"></span>
+      Menu
+    </button>
+  </div>
+
+  <div class="nav-panel" id="nav-panel" hidden>
+    <div class="wrap">
+      <nav aria-label="Main (mobile)">
+        <ul>
+          {[...items, ...utility].map((i) => (
+            <li><a href={i.href} aria-current={current === i.key ? 'page' : undefined}>{i.label}</a></li>
+          ))}
+        </ul>
+      </nav>
+      <div class="btn-row">
+        <a class="btn btn--primary" href={url('quote/')}>Get a quote</a>
+        <a class="btn btn--outline" href={company.phoneHref}>Call {company.phone}</a>
+      </div>
+    </div>
+  </div>
+</header>
+<!-- Runs before first paint: see-through header while the page is at the top. -->
+<script is:inline>(function(){var h=document.querySelector('.site-header');if(h&&window.scrollY<10)h.classList.add('is-top');})();</script>
+
+<script>
+  // Day/night switch. The theme itself is set before first paint in Base.astro;
+  // a choice made here is remembered on this device, otherwise the system setting is followed.
+  const themeBtn = document.querySelector<HTMLButtonElement>('.theme-toggle');
+  if (themeBtn) {
+    const root = document.documentElement;
+    const saved = () => { try { return localStorage.getItem('gx-theme'); } catch { return null; } };
+    const label = () => {
+      const text = root.dataset.theme === 'dark' ? 'Switch to day theme' : 'Switch to night theme';
+      themeBtn.setAttribute('aria-label', text);
+      themeBtn.title = text;
+    };
+    label();
+    themeBtn.addEventListener('click', () => {
+      const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+      root.dataset.theme = next;
+      try { localStorage.setItem('gx-theme', next); } catch { /* storage blocked: still switches for this page */ }
+      label();
+    });
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+      if (saved()) return;
+      root.dataset.theme = e.matches ? 'dark' : 'light';
+      label();
+    });
+  }
+
+  const header = document.querySelector<HTMLElement>('.site-header');
+  const toggle = document.querySelector<HTMLButtonElement>('.nav-toggle');
+  const panel = document.getElementById('nav-panel');
+
+  if (header) {
+    let menuOpen = false;
+    let ticking = false;
+    // Solid white once the page is scrolled or the mobile menu is open; see-through at the very top.
+    const update = () => {
+      header.classList.toggle('is-top', window.scrollY < 10 && !menuOpen);
+      ticking = false;
+    };
+    window.addEventListener('scroll', () => {
+      if (!ticking) { ticking = true; requestAnimationFrame(update); }
+    }, { passive: true });
+    update();
+
+    if (toggle && panel) {
+      const setOpen = (open: boolean) => {
+        menuOpen = open;
+        toggle.setAttribute('aria-expanded', String(open));
+        panel.hidden = !open;
+        update();
+      };
+      toggle.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'));
+      panel.addEventListener('click', (e) => {
+        if ((e.target as HTMLElement).closest('a')) setOpen(false);
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !panel.hidden) { setOpen(false); toggle.focus(); }
+      });
+    }
+  }
+</script>

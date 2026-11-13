@@ -1,0 +1,24 @@
+---
+// Old URLs of the previous site that now live elsewhere. Static hosting cannot send a 301,
+// so this page forwards at once; on the real server use a 301 redirect instead (see README).
+import { url } from '../lib/url';
+import { ORIGIN } from '../lib/seo';
+
+interface Props { to: string; label: string }
+const { to, label } = Astro.props;
+const target = url(to);
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <meta http-equiv="refresh" content={`0; url=${target}`} />
+    <link rel="canonical" href={`${ORIGIN}/${to}`} />
+    <title>This page moved | GFS Express</title>
+  </head>
+  <body style="font-family:system-ui,sans-serif;padding:24px">
+    <p>This page moved to <a href={target}>{label}</a>.</p>
+  </body>
+</html>

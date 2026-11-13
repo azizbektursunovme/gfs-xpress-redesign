@@ -1,0 +1,48 @@
+---
+// DRAFT written for this redesign (the old /terms page held a clinic's template text).
+// Website terms only: shipments are governed by each rate confirmation and carrier agreement.
+// Have it reviewed before publishing.
+import Base from '../layouts/Base.astro';
+import { company, fullAddress } from '../data/site';
+import { url } from '../lib/url';
+---
+<Base
+  title="Terms of Service | GFS Express"
+  description={`Terms for using ${company.domain}, the website of ${company.name}.`}
+  current="legal"
+>
+  <section class="page-hero page-hero--plain">
+    <div class="wrap page-hero__inner">
+      <h1>Terms of Service</h1>
+      <p class="lede">Last updated: November 2026</p>
+    </div>
+  </section>
+
+  <section class="section wrap legal">
+    <p>These terms apply to your use of {company.domain}, operated by {company.legalName}. By using the site you agree to them.</p>
+
+    <h2>Quotes and shipments</h2>
+    <p>Rates shown or sent through this website are estimates until confirmed in writing. Every shipment is governed by its rate confirmation and, for carriers, by the signed carrier agreement. Those documents take precedence over this page.</p>
+
+    <h2>Information you send</h2>
+    <p>You agree to give accurate information in our forms. We use it as described in our <a href={url('privacy/')}>Privacy Policy</a>.</p>
+
+    <h2>Load board and tracking</h2>
+    <p>Loads on the load board are offers to carriers in our network and may be withdrawn at any time. A load is booked only when we send a rate confirmation. Tracking information is provided for convenience and may be delayed.</p>
+
+    <h2>Use of the website</h2>
+    <p>Do not misuse the site, try to access systems you are not allowed to use or send content that is unlawful. The text, logo and design of this site belong to {company.name} or are used with permission.</p>
+
+    <h2>Links</h2>
+    <p>Links to other websites are provided for convenience. We are not responsible for their content.</p>
+
+    <h2>Liability</h2>
+    <p>The website is provided "as is". To the extent the law allows, we are not liable for damages arising from the use of the website itself. Liability for freight is set by the shipment documents and applicable law.</p>
+
+    <h2>Governing law</h2>
+    <p>These terms are governed by the laws of the State of {company.stateName}.</p>
+
+    <h2>Contact</h2>
+    <p>{company.legalName}, {fullAddress}. Phone <a href={company.phoneHref}>{company.phone}</a>, email <a href={`mailto:${company.email}`}>{company.email}</a>.</p>
+  </section>
+</Base>

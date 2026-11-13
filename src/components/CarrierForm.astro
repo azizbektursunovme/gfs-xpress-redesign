@@ -1,0 +1,96 @@
+---
+// Carrier setup request. Sends JSON to PUBLIC_CARRIER_ENDPOINT through LeadForm.
+// Documents (insurance certificate, W-9, carrier agreement) are exchanged after the first call,
+// so this form asks for no files and no sensitive numbers beyond MC/DOT.
+import LeadForm from './LeadForm.astro';
+import Icon from './Icon.astro';
+
+const endpoint = import.meta.env.PUBLIC_CARRIER_ENDPOINT ?? '';
+---
+<LeadForm
+  id="carrier-form"
+  endpoint={endpoint}
+  source="website-carrier-setup"
+  submitLabel="Send carrier application"
+  sendingLabel="Sending application…"
+  successTitle="Application sent"
+  successText="Thank you. Our carrier team will call you to finish setup and request your insurance certificate and W-9."
+  replyNote="Our carrier team replies by phone or email."
+>
+  <fieldset class="step" aria-labelledby="c-step-1">
+    <div class="step__head">
+      <span class="step__num" aria-hidden="true">1</span>
+      <div>
+        <h3 class="step__title" id="c-step-1">Your company</h3>
+        <p class="step__hint">We verify your authority with FMCSA before the first load.</p>
+      </div>
+    </div>
+    <div class="form-grid">
+      <div class="field span-2">
+        <label class="label" for="c-company">Company name</label>
+        <div class="input-wrap"><Icon name="building" /><input class="input" id="c-company" name="company" autocomplete="organization" required data-msg="Enter your company name." aria-describedby="c-company-err" /></div>
+        <p class="field-error" id="c-company-err"></p>
+      </div>
+      <div class="field">
+        <label class="label" for="c-mc">MC number</label>
+        <input class="input" id="c-mc" name="mc" inputmode="numeric" pattern="[0-9]{4,8}" required placeholder="123456" data-msg="Enter your MC number (4 to 8 digits)." aria-describedby="c-mc-err" />
+        <p class="field-error" id="c-mc-err"></p>
+      </div>
+      <div class="field">
+        <label class="label" for="c-dot">USDOT number</label>
+        <input class="input" id="c-dot" name="dot" inputmode="numeric" pattern="[0-9]{5,8}" required placeholder="1234567" data-msg="Enter your USDOT number (5 to 8 digits)." aria-describedby="c-dot-err" />
+        <p class="field-error" id="c-dot-err"></p>
+      </div>
+      <div class="field span-2" role="radiogroup" aria-labelledby="c-eq-label">
+        <span class="label" id="c-eq-label">Main equipment</span>
+        <div class="choice-cards choice-cards--3">
+          <label class="choice-card"><input type="radio" name="equipment" value="dry-van" checked /><span><strong>Dry van</strong><span>53' trailers</span></span></label>
+          <label class="choice-card"><input type="radio" name="equipment" value="reefer" /><span><strong>Reefer</strong><span>Temperature-controlled</span></span></label>
+          <label class="choice-card"><input type="radio" name="equipment" value="flatbed" /><span><strong>Flatbed</strong><span>Flatbed or step deck</span></span></label>
+        </div>
+      </div>
+      <div class="field">
+        <label class="label" for="c-trucks">Number of trucks</label>
+        <select class="input" id="c-trucks" name="trucks" required data-msg="Choose the number of trucks." aria-describedby="c-trucks-err">
+          <option value="">Choose</option>
+          <option>1 (owner-operator)</option>
+          <option>2 to 5</option>
+          <option>6 to 20</option>
+          <option>21+</option>
+        </select>
+        <p class="field-error" id="c-trucks-err"></p>
+      </div>
+      <div class="field">
+        <label class="label" for="c-lanes">Preferred lanes <span class="opt">(optional)</span></label>
+        <input class="input" id="c-lanes" name="lanes" placeholder="Midwest to Southeast" />
+      </div>
+    </div>
+  </fieldset>
+
+  <fieldset class="step" aria-labelledby="c-step-2">
+    <div class="step__head">
+      <span class="step__num" aria-hidden="true">2</span>
+      <div>
+        <h3 class="step__title" id="c-step-2">Contact person</h3>
+        <p class="step__hint">Who our carrier team should call to finish setup.</p>
+      </div>
+    </div>
+    <div class="form-grid">
+      <div class="field span-2">
+        <label class="label" for="c-name">Full name</label>
+        <div class="input-wrap"><Icon name="user" /><input class="input" id="c-name" name="name" autocomplete="name" required data-msg="Enter your name." aria-describedby="c-name-err" /></div>
+        <p class="field-error" id="c-name-err"></p>
+      </div>
+      <div class="field">
+        <label class="label" for="c-email">Email</label>
+        <div class="input-wrap"><Icon name="mail" /><input class="input" id="c-email" name="email" type="email" autocomplete="email" required placeholder="dispatch@yourcompany.com" data-msg="Enter an email address like name@company.com." aria-describedby="c-email-err" /></div>
+        <p class="field-error" id="c-email-err"></p>
+      </div>
+      <div class="field">
+        <label class="label" for="c-phone">Phone</label>
+        <div class="input-wrap"><Icon name="phone" /><input class="input" id="c-phone" name="phone" type="tel" autocomplete="tel" required pattern="[0-9()+.\s-]{10,20}" placeholder="(636) 555-0100" data-msg="Enter a phone number with area code." aria-describedby="c-phone-err" /></div>
+        <p class="field-error" id="c-phone-err"></p>
+      </div>
+    </div>
+  </fieldset>
+</LeadForm>

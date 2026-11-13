@@ -76,8 +76,9 @@ Batafsil: [docs/sitemap.md](docs/sitemap.md), [docs/design-system.md](docs/desig
 
 ## Tezlik
 
-Lighthouse 13.6 (lokal `npm run preview`): telefonda Performance 99–100, kompyuterda 100; Accessibility, Best Practices, SEO 100. CLS 0.
-GitHub Pages'dagi natija topshirish hujjatida.
+GitHub Pages preview, PageSpeed Insights (bosh sahifa, 2026-11-13): telefonda 99 (LCP 1.5 s, TBT 30 ms, CLS 0), kompyuterda 100. Accessibility va Best Practices 100.
+SEO 66 faqat preview'dagi noindex sababli; asosiy domenda `PUBLIC_NOINDEX` bo'sh qoldiriladi.
+Lighthouse 13.6 (lokal, 10 sahifa): telefonda 99–100, kompyuterda 100; Accessibility, Best Practices, SEO 100.
 
 ## Ma'lumotlarni o'zgartirish
 
